@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>
+    <%= title %>
+  </h1>
+  <textarea id="myarea" cols="100" rows="50" wrap="off"></textarea><br />
+  <input type="button" value="load" onclick="loadfile()" />
+  <input type="button" value="save" onclick="savefile()" />
+</body>
+<!-- https://stackoverflow.com/questions/35316284/running-executable-application-on-chrome -->
+<script type="text/javascript">
+  // var fso = new ActiveXObject("Scripting.FileSystemObject");
+  // var Player = "C:/installedPro/player.exe ";
+  // var playFile = "//localhost/public/test.nmf";
+  // if (!fso.FileExists(Player)) {
+  //   alert("Player is not exists");
+  // } else if (!fso.FileExists(playFile)) {
+  //   alert("playFile is not exists");
+  // }
+  var fso = new ActiveXObject("Scripting.FileSystemObject");
+  var filename = "\\MAC\\Home\\Desktop:\\text.txt";
+  var delim = "\t";
+
+  function savefile() {
+    if (!fso.FileExists(filename)) {
+      fso.CreateTextFile(filename, true);
+    }
+    var f = fso.OpenTextFile(filename, 2, true);
+    fso.Write(myarea.innerText);
+    fso.Close();
+  }
+
+  function loadfile() {
+    if (!fso.FileExists(filename)) {
+      fso.CreateTextFile(filename, true);
+    }
+    var f = fso.OpenTextFile(filename, 1);
+    var arr = new Array();
+    var i = 0;
+    while (!f.AtEndOfStream) {
+      arr[i++] = fso.ReadLine().split(delim);
+    }
+    myarea.innerText = "";
+    for (var i = 0; i < arr.length; i++) {
+      for (var j = 0; j < arr[i].length; j++) {
+        myarea.insertAdjacentText("beforeEnd", arr[i][j] + delim);
+      }
+      myarea.insertAdjacentText("beforeEnd", "\n");
+    }
+    fso.Close();
+  }
+
+  function window.onload() {
+    loadfile(filename);
+  }
+</script>
+
+</html>
